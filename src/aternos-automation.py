@@ -1,4 +1,7 @@
 import sys
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
 
 def main():
     if(len(sys.argv) != 2):
@@ -18,8 +21,11 @@ def main():
 #end main()
 
 def start():
-    print("starting server...")
+    global driver
 
+    print("starting server...")
+    connect()
+    disconnect()
 #end start()
 
 def stop():
@@ -31,5 +37,21 @@ def restart():
     print("restarting server...")
     
 #end start()
+
+def connect():
+    global driver
+    driver = webdriver.Chrome()
+    driver.get("https://aternos.org/server/")
+
+    if("Login" in driver.title):
+        print("signing in...")
+
+    #endif
+
+#end connect()
+
+def disconnect():
+    driver.close()
+#end disconnect()
 
 if __name__ == "__main__": main() #don't run on import
