@@ -7,8 +7,6 @@ from selenium.webdriver.common.keys import Keys
 
 CHROME_PATH        = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"
 CHROME_DRIVER_PATH = "D:/Libraries/git/aternos-automation/bin/chromedriver"
-USERNAME = "codstercraftbot"
-PASSWORD = "verystrongpassword2"
 
 FRIEND_ACCESS_SCRIPT = """
 function my_script() {
