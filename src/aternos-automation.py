@@ -1,4 +1,5 @@
 import sys
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -6,6 +7,31 @@ from selenium.webdriver.common.keys import Keys
 
 CHROME_PATH        = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"
 CHROME_DRIVER_PATH = "D:/Libraries/git/aternos-automation/bin/chromedriver"
+
+FRIEND_ACCESS_SCRIPT = """
+function my_script() {
+    apost('/panel/ajax/friends/access.php', {user: "thecodestercraft"}, function (result) {
+        data = JSON.parse(result);
+        if (!data.success) {
+            if (!data.error) {
+                data.error = LANGUAGE.error;
+            }
+
+            alert({
+                text: data.error,
+                color: "red",
+                buttons: ["okay"]
+            });
+            return;
+        }
+
+        setTimeout(function () {
+            location.href = data.location;
+        }, 300);
+    });
+}
+my_script();
+"""
 
 # Global Variables #
 try:
@@ -39,59 +65,56 @@ def main():
         print("ERROR: Invalid Arguments")
     #endif
 
-    input("")
+    input("script done!")
     stop_driver()
 #end main()
 
 def start():
     global driver
     print("starting server...")
-
-    result = driver.execute_script("start();")
-    print(str(result))
+    time.sleep(2)
+    driver.execute_script("start();")
 #end start()
 
 def stop():
     global driver
     print("stopping server...")
-
-    result = driver.execute_script("stop();")
-    print(str(result))
+    time.sleep(2)
+    driver.execute_script("stop();")
 #end start()
 
 def restart():
     global driver
     print("restarting server...")
-    
-    result = driver.execute_script("restart();")
-    print(str(result))
+    time.sleep(2)
+    driver.execute_script("restart();")
 #end start()
 
 def login():
     # attempt to open server page #
-    driver.get("https://aternos.org/server/")
+    driver.get("https://aternos.org/friends/")
 
     if(not ("Login" in driver.title)):
         return # already signed in
     #endif
 
     print("signing in...")
+    driver.execute_script("$(\"#user\").val(\""     + USERNAME + "\");")
+    driver.execute_script("$(\"#password\").val(\"" + PASSWORD + "\");")
+    driver.execute_script("login();")
 
-    # set username #
-    result = driver.execute_script("$(\"#user\").val(\"" + USERNAME + "\");")
-    print(str(result))
-
-    # set password #
-    result = driver.execute_script("$(\"#password\").val(\"" + PASSWORD + "\");")
-    print(str(result))
-
-    # login #
-    result = driver.execute_script("login();")
-    print(str(result))
+    time.sleep(5)
 
     # accept EULA #
-    result = driver.execute_script("acceptEULA();")
-    print(str(result))
+    #result = driver.execute_script("acceptEULA();")
+    #print(str(result))
+    #time.sleep(2)
+
+    # goto friend's server page #
+    print("going to friend's page...")
+    driver.get("https://aternos.org/friends/")
+    time.sleep(2)
+    driver.execute_script(FRIEND_ACCESS_SCRIPT)
 #end login()
 
 def stop_driver():
