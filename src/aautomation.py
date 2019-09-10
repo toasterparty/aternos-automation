@@ -45,6 +45,7 @@ except Exception:
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = CHROME_PATH
+chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(CHROME_DRIVER_PATH,options=chrome_options)
 
 # Methods #
