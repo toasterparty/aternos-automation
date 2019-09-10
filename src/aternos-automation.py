@@ -61,11 +61,13 @@ def main():
         stop()
     elif(sys.argv[1] == "restart"):
         restart()
+    elif(sys.argv[1] == "status"):
+        get_status()
     else:
         print("ERROR: Invalid Arguments")
     #endif
 
-    input("script done!")
+    print("script done!")
     stop_driver()
 #end main()
 
@@ -89,6 +91,37 @@ def restart():
     time.sleep(2)
     driver.execute_script("restart();")
 #end start()
+
+def get_status():
+    global driver
+    time.sleep(2)
+    
+    isQueueing = driver.execute_script("return $('.status').hasClass(\"queueing\");")
+    print(str(isQueueing))
+
+    isLoading = driver.execute_script("return $('.status').hasClass(\"loading\");")
+    print(str(isLoading))
+
+    isOnline   = driver.execute_script("return $('.status').hasClass(\"online\");")
+    print(str(isOnline))
+
+    isOffline  = driver.execute_script("return $('.status').hasClass(\"offline\");")
+    print(str(isOffline))
+
+    if(isOnline):
+        status = "ONLINE"
+    elif(isQueueing or isLoading):
+        status = "QUEUED"
+    elif (isOffline):
+        status = "OFFLINE"
+    else:
+        status = "UNHANDLED"
+    #endif
+
+    print("status = " + status)
+
+    return status
+#endf get_status()
 
 def login():
     # attempt to open server page #
