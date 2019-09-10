@@ -1,4 +1,4 @@
 @echo off
 cd ..
 cd src
-python aternos-automation.py stop
+python aautomation.py stop

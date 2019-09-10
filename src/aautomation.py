@@ -128,6 +128,7 @@ def login():
     driver.get("https://aternos.org/friends/")
 
     if(not ("Login" in driver.title)):
+        driver.execute_script(FRIEND_ACCESS_SCRIPT)
         return # already signed in
     #endif
 
@@ -135,8 +136,7 @@ def login():
     driver.execute_script("$(\"#user\").val(\""     + USERNAME + "\");")
     driver.execute_script("$(\"#password\").val(\"" + PASSWORD + "\");")
     driver.execute_script("login();")
-
-    time.sleep(5)
+    time.sleep(2)
 
     # accept EULA #
     #result = driver.execute_script("acceptEULA();")
