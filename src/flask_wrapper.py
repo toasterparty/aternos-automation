@@ -5,7 +5,7 @@ app = flask.Flask(__name__)
 
 def do_main():
     login()
-    app.run()
+    app.run(host="0.0.0.0")
 #end main()
 
 @app.route('/start')
