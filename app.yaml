@@ -1,2 +1,1 @@
 runtime: python37
-entrypoint: gunicorn -b :5000 main:app
