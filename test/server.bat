@@ -1,5 +1,4 @@
 @echo off
 cd ..
-cd src
-python flask_wrapper.py
+python main.py
 pause
