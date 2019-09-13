@@ -69,14 +69,8 @@ def do_restart():
 
 @app.route('/status')
 def do_status():
-    try:
-        login()
-        status = get_status()
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        return str(e) + " (" + str(exc_tb.tb_lineno) + ")"
-    #end tryexcept
-    return status
+    login()
+    return get_status()
 #end do_status()
 
 def start():
