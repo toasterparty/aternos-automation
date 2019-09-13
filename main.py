@@ -6,7 +6,6 @@ import logging
 
 from flask import Flask
 from selenium import webdriver
-from pyvirtualdisplay import Display
 
 logging.info('started')
 
@@ -14,12 +13,9 @@ app = Flask(__name__)
 
 logging.info('flask started')
 
-# Add the webdrivers to the path
-os.environ['PATH'] += ':'+os.path.dirname(os.path.realpath(__file__))+"/webdrivers"
-
 # Constants #
 
-#CHROME_DRIVER_PATH = "./webdrivers/chromedriver"
+CHROME_DRIVER_PATH = "./webdrivers/chromedriver"
 
 FRIEND_ACCESS_SCRIPT = """
 function my_script() {
@@ -45,12 +41,6 @@ function my_script() {
 }
 my_script();
 """
-
-logging.info('creating display...')
-display = Display(visible=0, size=(1024, 768))
-
-logging.info('starting display...')
-display.start()
 
 @app.route('/')
 def root():
@@ -147,12 +137,12 @@ def login():
     display = Display(visible=0, size=(1024, 768))
     display.start()
 
-    #chrome_options = webdriver.ChromeOptions()
-    #chrome_options.add_argument("--headless")
-    #chrome_options.add_argument('--no-sandbox')
-    #chrome_options.add_argument('--disable-dev-shm-usage')
-    #driver = webdriver.Chrome(options=chrome_options)
-    driver = webdriver.Firefox()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(CHROME_DRIVER_PATH,options=chrome_options)
+    #driver = webdriver.Firefox()
 
     # attempt to open server page #
     driver.get("https://aternos.org/friends/")
