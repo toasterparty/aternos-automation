@@ -15,7 +15,9 @@ logging.info('flask started')
 
 # Constants #
 
-CHROME_DRIVER_PATH = "./webdrivers/chromedriver"
+#CHROME_DRIVER_PATH = "./webdrivers/chromedriver"
+FIREFOX_DRIVER_PATH = "./webdrivers/geckodriver"
+
 
 FRIEND_ACCESS_SCRIPT = """
 function my_script() {
@@ -128,11 +130,12 @@ def get_status():
 def login():
     global driver
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(CHROME_DRIVER_PATH,options=chrome_options)
+    #chrome_options = webdriver.ChromeOptions()
+    #chrome_options.add_argument("--headless")
+    #chrome_options.add_argument('--no-sandbox')
+    #chrome_options.add_argument('--disable-dev-shm-usage')
+    #driver = webdriver.Chrome(CHROME_DRIVER_PATH,options=chrome_options)
+    driver = webdriver.Firefox(FIREFOX_DRIVER_PATH)
 
     # attempt to open server page #
     driver.get("https://aternos.org/friends/")
