@@ -135,7 +135,7 @@ def login():
     #chrome_options.add_argument('--no-sandbox')
     #chrome_options.add_argument('--disable-dev-shm-usage')
     #driver = webdriver.Chrome(CHROME_DRIVER_PATH,options=chrome_options)
-    driver = webdriver.Firefox(FIREFOX_DRIVER_PATH)
+    driver = webdriver.Firefox()
 
     # attempt to open server page #
     driver.get("https://aternos.org/friends/")
