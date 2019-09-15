@@ -8,17 +8,9 @@ import logging
 from flask import Flask
 from selenium import webdriver
 
-logging.info('started')
-
 app = Flask(__name__)
 
-logging.info('flask started')
-
 # Constants #
-
-#CHROME_DRIVER_PATH = "./webdrivers/chromedriver"
-FIREFOX_DRIVER_PATH = "./geckodriver"
-
 
 FRIEND_ACCESS_SCRIPT = """
 function my_script() {
@@ -171,5 +163,5 @@ def stop_driver():
 
 if __name__ == "__main__":
     logging.info('starting flask app...')
-    app.run(host="127.0.0.1", port=8080)
+    app.run(host="0.0.0.0", port=8080)
     logging.info('flask app started')
