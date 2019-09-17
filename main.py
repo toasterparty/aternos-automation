@@ -3,14 +3,12 @@ import os
 import traceback
 import sys
 import time
-import logging
 
 from flask import Flask
 from selenium import webdriver
 
-app = Flask(__name__)
-
 # Constants #
+
 
 FRIEND_ACCESS_SCRIPT = """
 function my_script() {
@@ -37,61 +35,120 @@ function my_script() {
 my_script();
 """
 
+# globals #
+app = Flask(__name__)
+
+busy = False
+
+print("creating webdriver...")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+
+if os.name == 'nt':
+    chrome_options.binary_location = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+    driver = webdriver.Chrome("./test/chromedriver.exe",options=chrome_options)
+else:
+    driver = webdriver.Chrome(options=chrome_options)
+#endif
+
+#driver = webdriver.Firefox(FIREFOX_DRIVER_PATH)
+print("webdriver created")
+
 @app.route('/')
 def root():
-    return "test"
+    return "/start - start the server\n/status - get server status"
 
 @app.route('/start')
 def do_start():
-    login()
-    start()
-    return "success"
+    try:
+        lock_busy()
+        login()
+        start()
+        unlock_busy()
+        return "success"
+    except Exception as e:
+        return str(e)
+    #end tryexcept
 #end do_start()
 
 @app.route('/stop')
 def do_stop():
-    login()
-    stop()
-    return "success"
+    try:
+        lock_busy()
+        login()
+        stop()
+        unlock_busy()
+        return "success"
+    except Exception as e:
+        return str(e)
+    #end tryexcept
 #end do_stop()
 
 @app.route('/restart')
 def do_restart():
-    login()
-    restart()
-    return "success"
+    try:
+        lock_busy()
+        login()
+        restart()
+        unlock_busy()
+        return "success"
+    except Exception as e:
+        return str(e)
+    #end tryexcept
 #end do_restart()
 
 @app.route('/status')
 def do_status():
-    login()
-    return get_status()
+    try:
+        lock_busy()
+        login()
+        status = get_status()
+        unlock_busy()
+        return status
+    except Exception as e:
+        return str(e)
+    #end tryexcept
 #end do_status()
+
+def lock_busy():
+    global busy
+    start_wait_time = time.time()
+    while(busy):
+        time.sleep(0.5)
+        if(start_wait_time > 10):
+            print("10s elapsed... ignoring mutex...")
+            busy = False
+        #endif
+    busy = True
+#end lock_busy()
+
+def unlock_busy():
+    global busy
+    busy = False
+#end unlock_busy()
 
 def start():
     global driver
     print("starting server...")
-    time.sleep(2)
     driver.execute_script("start();")
 #end start()
 
 def stop():
     global driver
     print("stopping server...")
-    time.sleep(2)
     driver.execute_script("stop();")
 #end start()
 
 def restart():
     global driver
     print("restarting server...")
-    time.sleep(2)
     driver.execute_script("restart();")
 #end start()
 
 def get_status():
     global driver
-    time.sleep(2)
     
     isQueueing = driver.execute_script("return $('.status').hasClass(\"queueing\");")
     print(str(isQueueing))
@@ -122,23 +179,23 @@ def get_status():
 
 def login():
     global driver
+    print("checking login...")
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(options=chrome_options)
-    #driver = webdriver.Firefox(FIREFOX_DRIVER_PATH)
-    
+    if("Server" in driver.title):
+        print("already at server page")
+        return
+    #endif
+
     # attempt to open server page #
     driver.get("https://aternos.org/friends/")
 
     if(not ("Login" in driver.title)):
+        print("already signed in! navigating to friend's page...")
         driver.execute_script(FRIEND_ACCESS_SCRIPT)
         return # already signed in
     #endif
 
-    print("signing in...")
+    print("not signed in\nsigning in...")
     driver.execute_script("$(\"#user\").val(\""     + USERNAME + "\");")
     driver.execute_script("$(\"#password\").val(\"" + PASSWORD + "\");")
     driver.execute_script("login();")
@@ -162,6 +219,5 @@ def stop_driver():
 #end stop_driver()
 
 if __name__ == "__main__":
-    logging.info('starting flask app...')
-    app.run(host="0.0.0.0", port=8080)
-    logging.info('flask app started')
+    login()
+    app.run(host="0.0.0.0", port=8080, threaded=False)
