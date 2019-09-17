@@ -5,7 +5,7 @@ After=networktarget
 [Service]
 User=tinker
 WorkingDirectory=/home/tinker/aternos-automation/
-ExecStart=/usr/bin/python /home/tinker/aternos-automation/main.py
+ExecStart=/usr/bin/python3 /home/tinker/aternos-automation/main.py
 Restart=always
 
 [Install]
