@@ -1,4 +1,4 @@
 selenium==3.141.0
-Flask==1.1.1
+Flask==2.3.2
 pyvirtualdisplay==0.2.4
 gunicorn==19.9.0
